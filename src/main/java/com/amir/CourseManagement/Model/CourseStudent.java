@@ -24,5 +24,5 @@ public class CourseStudent {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    private String professorName;
+//    private String professorName;
 }
