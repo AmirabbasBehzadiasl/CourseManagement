@@ -2,12 +2,12 @@ package com.amir.CourseManagement.Controller;
 
 import com.amir.CourseManagement.Model.Student;
 import com.amir.CourseManagement.Service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/students")
@@ -18,19 +18,33 @@ public class StudentController {
     }
 
     @GetMapping("/getAllStudents")
-    public ResponseEntity<?> getAllStudent() {
-        Optional<List<Student>> students = studentService.getAllStudents();
-
+    public ResponseEntity<?> getAllStudents() {
+        List<Student> students = studentService.getAllStudents();
         if (students.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
         }
 
-        return ResponseEntity.ok(students);
+        return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
+    @GetMapping("/getStudentById/{id}")
+    public ResponseEntity<?> getStudentById(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentById(id));
+    }
     @PostMapping("/addStudent")
-    public ResponseEntity<?> addStudent(@RequestBody Student student) {
+    public ResponseEntity<?> addStudent(@Valid @RequestBody Student student) {
         studentService.addStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Student added");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
+    }
+    @PutMapping ("/updateStudent/{id}")
+    public ResponseEntity<?> updateStudent(@PathVariable int id ,@Valid @RequestBody Student student) {
+        studentService.updateStudent(id,student);
+        return ResponseEntity.status(HttpStatus.OK).body("student updated");
+    }
+
+    @DeleteMapping("/deleteStudent/{id}")
+    public ResponseEntity<?> deleteStudentById(@PathVariable int id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("student deleted");
     }
 }

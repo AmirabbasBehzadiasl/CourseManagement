@@ -1,19 +1,17 @@
 package com.amir.CourseManagement.Model;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
 public class CourseStudentId implements Serializable {
-    private int courseId;
-    private int studentId;
+    private Integer courseId;
+    private Integer studentId;
 }
