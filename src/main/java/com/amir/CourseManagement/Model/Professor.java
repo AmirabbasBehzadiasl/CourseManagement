@@ -1,5 +1,6 @@
 package com.amir.CourseManagement.Model;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -11,8 +12,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Professor  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +46,17 @@ public class Professor  {
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
+
+    public @NotNull(message = "personnelNumber is required") Integer getPersonnelNumber() {
+        return personnelNumber;
+    }
+
+    public void setPersonnelNumber(@NotNull(message = "personnelNumber is required") Integer personnelNumber) {
+        this.personnelNumber = personnelNumber;
+    }
+
+    public @NotNull(message = "first name is required") @Size(min = 2, max = 48, message = "firstName must be between 2 and 48 character") String getFirstName() {
+        return firstName;
+    }
+
 }

@@ -40,9 +40,20 @@ public class StudentService {
                 .ifPresentOrElse(existingStudent -> {
                     throw new AlreadyExistException("This student already exists");
                 }, () -> {
-                    studentRepository.save(student);});
+                    studentRepository.save(student);
 
+                        for (CourseStudent courseStudent : student.getCourses()) {
+                                Course course = courseRepository.findById(courseStudent.getCourse().getId())
+                                        .orElseThrow(() -> new NotFoundException("Course not found"));
+                            courseStudent.setCourse(course);
+                            courseStudent.setStudent(student);
+                            courseStudent.setId(new CourseStudentId(course.getId(), student.getId()));
+
+                            courseStudentRepository.save(courseStudent);
+                        }
+                });
     }
+
 
 
     public void updateStudent(int id, Student student) {

@@ -35,4 +35,13 @@ public class Faculty {
     @Column(nullable = false)
     @OneToMany(mappedBy = "faculty")
     private List<Course> courses;
+
+
+    public @Size(min = 5, max = 48) @Pattern(regexp = "^[a-zA-Z0-9]+$") String getName() {
+        return name;
+    }
+
+    public void setName(@Size(min = 5, max = 48) @Pattern(regexp = "^[a-zA-Z0-9]+$") String name) {
+        this.name = name;
+    }
 }

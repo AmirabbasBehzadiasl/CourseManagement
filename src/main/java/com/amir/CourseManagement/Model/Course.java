@@ -1,5 +1,6 @@
 package com.amir.CourseManagement.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,8 +11,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +42,9 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
+
+    public @NotNull(message = "Course name is required") @Size(min = 2, max = 64, message = "Course name must be between 2 and 64") String getName() {
+        return name;
+    }
+
 }

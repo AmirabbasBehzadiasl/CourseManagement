@@ -10,6 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CourseStudent {
     @EmbeddedId
     private CourseStudentId id;
