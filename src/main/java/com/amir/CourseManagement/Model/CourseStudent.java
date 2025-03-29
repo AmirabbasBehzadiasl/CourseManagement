@@ -1,16 +1,17 @@
 package com.amir.CourseManagement.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+//import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+//@Getter
+//@Setter
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@ToString
 public class CourseStudent {
     @EmbeddedId
     private CourseStudentId id;
@@ -29,4 +30,35 @@ public class CourseStudent {
 
     private int score;
 
+    public CourseStudentId getId() {
+        return id;
+    }
+
+    public void setId(CourseStudentId id) {
+        this.id = id;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 }

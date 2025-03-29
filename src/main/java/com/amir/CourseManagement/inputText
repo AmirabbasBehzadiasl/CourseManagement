@@ -1,0 +1,26 @@
+localhost:8080/courses/addCourse
+{
+    "name": "math",
+    "credits": 2,
+    "students" : [
+        {
+            "student" : {
+                "id" : 4
+            },
+            "score" : 10
+        },
+        {
+            "student" : {
+                "id" : 5
+            },
+            "score" : 9
+        }
+    ],
+    "professor" : {
+        "id" : 9
+    },
+    "faculty" : {
+        "id" : 1
+    }
+}
+/////////////////////////////////////////////////////////

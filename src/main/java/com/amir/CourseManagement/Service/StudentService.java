@@ -57,18 +57,18 @@ public class StudentService {
 
 
     public void updateStudent(int id, Student student) {
-        Student existingStudent = studentRepository.findById(id)
+        Student lastStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student with id " + id + " not found"));
 
-        BeanUtils.copyProperties(student, existingStudent, "id", "courses");
+        BeanUtils.copyProperties(lastStudent, student , "id","courses");
 
-        List<CourseStudent> existingCourses = existingStudent.getCourses();
+        List<CourseStudent> lastCourses = lastStudent.getCourses();
 
         for (CourseStudent newCourseStudent : student.getCourses()) {
             Course course = courseRepository.findById(newCourseStudent.getCourse().getId())
                     .orElseThrow(() -> new NotFoundException("Course not found"));
 
-            CourseStudent existingCourseStudent = existingCourses.stream()
+            CourseStudent existingCourseStudent = lastCourses.stream()
                     .filter(cs -> cs.getCourse().getId().equals(course.getId()))
                     .findFirst()
                     .orElse(null);
@@ -77,16 +77,16 @@ public class StudentService {
                 existingCourseStudent.setScore(newCourseStudent.getScore());
             } else {
                 CourseStudent courseStudent = new CourseStudent();
-                courseStudent.setId(new CourseStudentId(course.getId(), existingStudent.getId()));
+                courseStudent.setId(new CourseStudentId(course.getId(), lastStudent.getId()));
                 courseStudent.setCourse(course);
-                courseStudent.setStudent(existingStudent);
+                courseStudent.setStudent(lastStudent);
                 courseStudent.setScore(newCourseStudent.getScore());
 
-                existingCourses.add(courseStudent);
+                lastCourses.add(courseStudent);
             }
         }
 
-        studentRepository.save(existingStudent);
+        studentRepository.save(student);
     }
 
 

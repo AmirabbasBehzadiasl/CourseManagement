@@ -3,8 +3,10 @@ package com.amir.CourseManagement.Service;
 import com.amir.CourseManagement.Exceptions.AlreadyExistException;
 import com.amir.CourseManagement.Exceptions.NotFoundException;
 import com.amir.CourseManagement.Model.Course;
+import com.amir.CourseManagement.Model.Faculty;
 import com.amir.CourseManagement.Model.Professor;
 import com.amir.CourseManagement.Repository.CourseRepository;
+import com.amir.CourseManagement.Repository.FacultyRepository;
 import com.amir.CourseManagement.Repository.ProfessorRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class ProfessorService {
     ProfessorRepository professorRepository;
     CourseRepository courseRepository;
-    public ProfessorService(ProfessorRepository professorRepository, CourseRepository courseRepository) {
+    FacultyRepository facultyRepository;
+    public ProfessorService(ProfessorRepository professorRepository, CourseRepository courseRepository , FacultyRepository facultyRepository) {
         this.professorRepository = professorRepository;
         this.courseRepository = courseRepository;
+        this.facultyRepository = facultyRepository;
     }
 
     public List<Professor> getAllProfessors() {
@@ -39,6 +43,13 @@ public class ProfessorService {
                         .orElseThrow(() -> new NotFoundException("Course with id " + course.getId() + " not found"));
                 course1.setProfessor(professor);
             }
+        }
+        if (professor.getFaculty()!= null) {
+            Faculty faculty = facultyRepository.findById(professor.getFaculty().getId()).orElseThrow(
+                    () -> new NotFoundException("Faculty could not be found")
+            );
+            faculty.getProfessors().add(professor);
+            faculty.setProfessors(faculty.getProfessors());
         }
         return professorRepository.save(professor);
 
@@ -64,7 +75,7 @@ public class ProfessorService {
 
     public void deleteProfessorById(int id) {
         Professor professor = professorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Course with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Professor with id " + id + " not found"));
         for (Course course : professor.getCourses()) {
             Course course1 = courseRepository.findById(course.getId())
                     .orElseThrow(() -> new NotFoundException("Course with id " + course.getId() + " not found"));

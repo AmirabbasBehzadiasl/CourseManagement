@@ -1,5 +1,7 @@
 package com.amir.CourseManagement.Service;
 
+import com.amir.CourseManagement.Exceptions.AlreadyExistException;
+import com.amir.CourseManagement.Model.Course;
 import com.amir.CourseManagement.Model.Faculty;
 import com.amir.CourseManagement.Exceptions.NotFoundException;
 import com.amir.CourseManagement.Repository.FacultyRepository;
@@ -16,32 +18,38 @@ public class FacultyService {
     }
 
     public List<Faculty> getAllFaculties() {
-        System.out.println("Inside getAllFaculties");
         return facultyRepository.findAll();
     }
 
-    public Optional<Faculty> getFacultyById(int id) {
-        return facultyRepository.findById(id);
+    public Faculty getFacultyById(int id) {
+        return facultyRepository.findById(id)
+                .orElseThrow(() ->  new NotFoundException("Faculty with id " + id + " not found"));
     }
 
+    public Faculty addFaculty(Faculty faculty) {
+        facultyRepository.findFacultiesByName(faculty.getName())
+                .ifPresentOrElse( existingFaculty -> {throw new AlreadyExistException("this Faculty already exists");},
+                        () -> facultyRepository.save(faculty));
 
-    public void addFaculty(Faculty faculty) {
-        facultyRepository.save(faculty);
+        return facultyRepository.save(faculty);
+
     }
 
-    public Faculty updateFaculty(int id, Faculty faculty) {
-        Faculty faculty1 = facultyRepository.findById(id).orElseThrow(() -> new NotFoundException("faculty with id " +id+" doesn't exist"));
-        faculty1.setName(faculty.getName());
-        faculty1.setHead(faculty.getHead());
-        faculty1.setStudents(faculty.getStudents());
-        faculty1.setProfessors(faculty.getProfessors());
-        faculty1.setCourses(faculty.getCourses());
-
-        return facultyRepository.save(faculty1);
+    public void updateFaculty(int id, Faculty faculty) {
+        facultyRepository.findById(id)
+                .ifPresentOrElse(existingFaculty -> {
+                    existingFaculty.setName(faculty.getName());
+                    existingFaculty.setHead(faculty.getHead());
+                    existingFaculty.setCourses(faculty.getCourses());
+                    existingFaculty.setProfessors(faculty.getProfessors());
+                    existingFaculty.setStudents(faculty.getStudents());
+                    facultyRepository.save(existingFaculty);
+                }, () -> {throw new NotFoundException("Faculty with id " + id + " not found");});
     }
 
     public void deleteFacultyById(int id) {
-        facultyRepository.findById(id).orElseThrow(() -> new NotFoundException("faculty with id " + id + " doesn't exist"));
-        facultyRepository.deleteById(id);
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Faculty with id " + id + " not found"));
+        facultyRepository.delete(faculty);
     }
 }
